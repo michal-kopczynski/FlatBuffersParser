@@ -1,5 +1,16 @@
 # FlatBuffersParser
+FlatBuffers Parser is socket based tool for parsing binary FlatBuffers data to JSON format. 
 
+Usage
+-----
+* Initialize with the schema file by passing schema file as parameter.
+
+        FlatBuffersParser [SCHEMA FILE] 
+    
+* Connect to parser's socket on port 12345.
+
+* Send binary data to parser using socket. Receive response with parsed data.
+    
 Build
 -----
 #### Get the source
