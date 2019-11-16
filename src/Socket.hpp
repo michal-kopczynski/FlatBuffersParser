@@ -12,7 +12,7 @@ public:
     Socket(int socketFd);
     ~Socket();
     int bind(std::string ip, unsigned int port);
-    int listen(); //int max connections param
+    int listen();
     std::unique_ptr<Socket> accept();
     int connect(std::string ip, unsigned int port);
     int send(const char* data, std::size_t size);

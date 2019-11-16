@@ -31,8 +31,10 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
-include_directories(${TEST_SOURCE_DIR}/src)
 
-add_executable(UnitTests Socket_test.cpp)
+set(HEADER_FILES ${CMAKE_HOME_DIRECTORY}/src/Socket.hpp)
+
+add_executable(UnitTests Socket_test.cpp ${HEADER_FILES})
+target_include_directories(UnitTests PRIVATE ${CMAKE_HOME_DIRECTORY}/src)
 target_link_libraries(UnitTests Socket  ${GTEST_BOTH_LIBRARIES} gmock gtest gtest_main)
 add_test(NAME UnitTests COMMAND UnitTests)

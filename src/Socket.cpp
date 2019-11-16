@@ -31,8 +31,8 @@ int Socket::bind(std::string ip, unsigned int port) {
     std::cout << "bind. status: " << status << std::endl;
     return status;
 }
-//1
-int Socket::listen() { //int max connections param
+
+int Socket::listen() {
     ::listen(socketFd,5);
     return socketFd;
 }

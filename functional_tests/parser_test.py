@@ -29,17 +29,16 @@ if __name__ == '__main__':
 
     parser_runner = ParserRunner()
     parser_runner.start_parser()
-
-    #connect to parser
+    time.sleep(0.5)
+    # Connect to parser
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect(('localhost', parser_port))
         print("Connected to parser")
     except:
         print("Connection error!")
-    time.sleep(0.1)
 
-    #open raw file and send it's content to parser
+    # Open raw file and send it's content to parser
     with open("raw.bin", "rb") as raw_binary_file:
         binary_data = raw_binary_file.read()
         s.send(binary_data)

@@ -20,9 +20,7 @@ void Parser::LoadFile(const char* filename){
             printf("couldn't load files!\n");
             return;
         }
-        //schemafiles.push_back(schemafile);
         std::string file(filename);
-        //std::cout << "path: " << get_directory_from_path(file).c_str() << std::endl;
         const char *include_directories[] = { "", nullptr };
         ok = parser->Parse(schemafile.c_str(), include_directories);
         assert(ok);
@@ -35,10 +33,9 @@ std::size_t Parser::ParseBuffer(const char * reqBuffer, char * respBuffer)
 {
     std::string jsongen;
     if (!GenerateText(*parser, reqBuffer, &jsongen)) {
-        printf("Couldn't serialize parsed data to JSON!\n");
+        std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
         return 0;
     }
-    jsongen.copy(respBuffer, jsongen.length() );
-//printf("Parsed length: %u\n", jsongen.length());
+    jsongen.copy(respBuffer, jsongen.length());
     return jsongen.length();
 }

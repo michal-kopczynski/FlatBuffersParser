@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(TEST)
+project(FlatBuffersParser)
 
 set(CMAKE_CXX_STANDARD 17)
 
