@@ -28,8 +28,10 @@ Build
 Test
 -----
 #### Run unit tests
+
     build$ make test
 or
+
     FlatBuffersParser$ ./build/test/UnitTests
 
 #### Run functional tests
