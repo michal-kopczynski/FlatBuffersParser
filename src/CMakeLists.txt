@@ -34,15 +34,17 @@ ExternalProject_Add(
 ExternalProject_Get_Property(cxxopts source_dir)
 set(CXXOPTS_INCLUDE_PATH ${source_dir}/include)
 
+add_library(Arguments Arguments.cpp Arguments.hpp ${CXXOPTS_INCLUDE_PATH}/cxxopts.hpp)
+target_include_directories(Arguments PRIVATE ${CXXOPTS_INCLUDE_PATH})
 add_library(Client Client.cpp Client.hpp)
 add_library(Socket Socket.cpp Socket.hpp)
 add_library(Parser Parser.cpp Parser.hpp)
-add_executable(FlatBuffersParser main.cpp ${CXXOPTS_INCLUDE_PATH}/cxxopts.hpp)
-target_include_directories(FlatBuffersParser PRIVATE ${CXXOPTS_INCLUDE_PATH})
+target_include_directories(Parser PRIVATE ${flatbuffers_PATH})
+add_executable(FlatBuffersParser main.cpp)
 
-target_link_libraries(FlatBuffersParser Client Socket Parser ${FLATBUFFERS_LIBRARY} pthread)
+target_link_libraries(FlatBuffersParser Arguments Client Socket Parser ${FLATBUFFERS_LIBRARY} pthread)
 
-# add_dependencies(FlatBuffersParser flatbuffers cxxopts)
+add_dependencies(FlatBuffersParser flatbuffers cxxopts)
 
 add_custom_command(
         TARGET FlatBuffersParser POST_BUILD
