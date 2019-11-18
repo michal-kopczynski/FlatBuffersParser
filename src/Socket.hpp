@@ -1,5 +1,4 @@
-#ifndef FLATBUFFERSPARSER_SOCKET_HPP
-#define FLATBUFFERSPARSER_SOCKET_HPP
+#pragma once
 
 #include <string>
 
@@ -20,6 +19,3 @@ public:
 private:
     int socketFd = 0;
 };
-
-
-#endif //FLATBUFFERSPARSER_SOCKET_HPP

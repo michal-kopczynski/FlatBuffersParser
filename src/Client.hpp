@@ -1,5 +1,4 @@
-#ifndef FLATBUFFERSPARSER_CLIENT_HPP
-#define FLATBUFFERSPARSER_CLIENT_HPP
+#pragma once
 
 #include <memory>
 #include <thread>
@@ -20,5 +19,3 @@ private:
     char respBuffer[20000];
 };
 
-
-#endif //FLATBUFFERSPARSER_CLIENT_HPP

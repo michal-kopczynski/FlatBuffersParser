@@ -1,5 +1,4 @@
-#ifndef FLATBUFFERSPARSER_PARSER_HPP
-#define FLATBUFFERSPARSER_PARSER_HPP
+#pragma once
 
 #include <cstddef>
 #include "flatbuffers/flatbuffers.h"
@@ -15,6 +14,3 @@ public:
 private:
     std::unique_ptr <flatbuffers::Parser> parser;
 };
-
-
-#endif //FLATBUFFERSPARSER_PARSER_HPP
