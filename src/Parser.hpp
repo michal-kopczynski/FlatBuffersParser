@@ -8,8 +8,8 @@
 class Parser {
 public:
     Parser();
-    void LoadFile(const char* filename);
-    std::size_t ParseBuffer(const char * reqBuffer, char * respBuffer);
+    void loadFile(const std::string filename);
+    std::size_t parseBuffer(const char * reqBuffer, char * respBuffer);
 
 private:
     std::unique_ptr <flatbuffers::Parser> parser;

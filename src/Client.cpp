@@ -16,7 +16,7 @@ void Client::serve() {
     {
         if (socket->receive(reqBuffer, 2000)){
             std::cout << "Request received" << std::endl;
-            auto responseSize = parser->ParseBuffer(reqBuffer, respBuffer);
+            auto responseSize = parser->parseBuffer(reqBuffer, respBuffer);
             socket->send(respBuffer, responseSize);
             std::cout << "Response sent. Size: "<< responseSize << std::endl;
         }

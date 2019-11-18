@@ -6,14 +6,15 @@ import time
 import pprint
 import json
 
+
 class ParserRunner:
-    def start_parser(self):
+    def start_parser(self, port):
         print("Starting parser")
         self.parser_subprocess = subprocess.Popen([os.path.join('..','bin','FlatBuffersParser'),
-                                                   'monster.fbs',
+                                                   '--file=monster.fbs', '--port=' + str(port)
                                                    ], stdout=subprocess.PIPE,
                                shell=False, preexec_fn=os.setsid)
-        print("Parser started")
+        print("Parser started. Listening on port: {}".format(port))
 
     def terminate_parser(self):
         os.killpg(os.getpgid(self.parser_subprocess.pid), signal.SIGTERM)
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     print("Parser client test started")
 
     parser_runner = ParserRunner()
-    parser_runner.start_parser()
+    parser_runner.start_parser(parser_port)
     time.sleep(0.5)
     # Connect to parser
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

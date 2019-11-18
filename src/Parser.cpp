@@ -10,14 +10,14 @@ Parser::Parser()
     parser = std::make_unique<flatbuffers::Parser>(opts);
 }
 
-void Parser::LoadFile(const char* filename){
+void Parser::loadFile(const std::string filename){
     std::ifstream fi(filename);
     bool ok;
     if (fi.is_open()) {
         std::string schemafile;
-        ok = flatbuffers::LoadFile(filename, false, &schemafile);
+        ok = flatbuffers::LoadFile(filename.c_str(), false, &schemafile);
         if (!ok) {
-            printf("couldn't load files!\n");
+            std::cout << "couldn't load files!" << std::endl;
             return;
         }
         std::string file(filename);
@@ -26,10 +26,10 @@ void Parser::LoadFile(const char* filename){
         assert(ok);
     }
     else
-        std::cout << "file not found" << std::endl;
+        std::cout << "File not found!" << std::endl;
 }
 
-std::size_t Parser::ParseBuffer(const char * reqBuffer, char * respBuffer)
+std::size_t Parser::parseBuffer(const char * reqBuffer, char * respBuffer)
 {
     std::string jsongen;
     if (!GenerateText(*parser, reqBuffer, &jsongen)) {
