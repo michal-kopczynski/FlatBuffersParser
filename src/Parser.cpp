@@ -39,7 +39,7 @@ void Parser::loadFile(const std::string filename){
 std::size_t Parser::parseBuffer(const char * reqBuffer, char * respBuffer)
 {
     std::string jsongen;
-    if (!GenerateText(*parser, reqBuffer, &jsongen)) {
+    if (!flatbuffers::GenerateText(*parser, reqBuffer, &jsongen)) {
         std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
         return 0;
     }
