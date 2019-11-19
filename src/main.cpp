@@ -12,8 +12,12 @@ int main(int argc, char ** argv) {
     Arguments arguments;
     try {
         arguments.parse(argc, argv);
-    } catch (const char* msg) {
-        std::cerr << msg << std::endl;
+    } catch (SchemaFileNotSpecifiedException& e) {
+        std::cerr << "Schema file not specified!" << std::endl;
+        return -1;
+    } catch (PortNotSpecifiedException& e) {
+        std::cerr << "Port not specified!" << std::endl;
+        return -1;
     }
 
     auto parser = std::make_shared<Parser>();
@@ -23,6 +27,7 @@ int main(int argc, char ** argv) {
         parser->loadFile(arguments.schemaFile);
     } catch (const char* msg) {
         std::cerr << msg << std::endl;
+        return -1;
     }
 
     Socket socket;

@@ -17,16 +17,17 @@ void Parser::loadFile(const std::string filename){
         std::string schemafile;
         ok = flatbuffers::LoadFile(filename.c_str(), false, &schemafile);
         if (!ok) {
-            std::cout << "couldn't load files!" << std::endl;
-            return;
+            throw "Couldn't load file!";
         }
         std::string file(filename);
         const char *include_directories[] = { "", nullptr };
-        ok = parser->Parse(schemafile.c_str(), include_directories);
-        assert(ok);
+        if (!parser->Parse(schemafile.c_str(), include_directories)){
+            throw "Error parsing file!";   
+        }
     }
-    else
-        std::cout << "File not found!" << std::endl;
+    else{
+        throw "File not found!";
+    }
 }
 
 std::size_t Parser::parseBuffer(const char * reqBuffer, char * respBuffer)

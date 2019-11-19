@@ -17,13 +17,13 @@ void Arguments::parse(int argc, char ** argv){
         schemaFile = result["file"].as<std::string>();
     }
     else {
-        throw "Schema file not specified!";
+        throw SchemaFileNotSpecifiedException();
     }
 
     if (result.count("port")) {
         port = result["port"].as<int>();
     }
     else {
-        throw "Port not specified!";
+        throw PortNotSpecifiedException();
     }
 }
