@@ -1,6 +1,10 @@
 #include "Parser.hpp"
 #include <iostream>
 
+#include "flatbuffers/flatbuffers.h"
+#include "flatbuffers/idl.h"
+#include "flatbuffers/util.h"
+
 Parser::Parser()
 {
     flatbuffers::IDLOptions opts;
@@ -9,6 +13,8 @@ Parser::Parser()
     opts.output_default_scalars_in_json = true;
     parser = std::make_unique<flatbuffers::Parser>(opts);
 }
+
+Parser::~Parser() = default;
 
 void Parser::loadFile(const std::string filename){
     std::ifstream fi(filename);

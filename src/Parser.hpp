@@ -1,13 +1,17 @@
 #pragma once
 
 #include <cstddef>
-#include "flatbuffers/flatbuffers.h"
-#include "flatbuffers/idl.h"
-#include "flatbuffers/util.h"
+#include <string>
+#include <memory>
+
+namespace flatbuffers{
+    class Parser;
+}
 
 class Parser {
 public:
     Parser();
+    ~Parser();
     void loadFile(const std::string filename);
     std::size_t parseBuffer(const char * reqBuffer, char * respBuffer);
 
