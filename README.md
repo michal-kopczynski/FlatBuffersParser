@@ -3,11 +3,17 @@ FlatBuffers Parser is socket based tool for parsing binary FlatBuffers data to J
 
 Usage
 -----
-* Initialize with the schema file by passing schema file as parameter.
+* Initialize with the schema file by passing schema file name as a parameter. Also, specify listening port.
 
-        FlatBuffersParser [SCHEMA FILE] 
+          FlatBuffersParser [OPTION...]
+
+          -p, --port arg  Port to listen.
+          -f, --file arg  Schema files.
+          -v, --version   Print the version number and exit.
+          -h, --help      Print help and exit.
+
     
-* Connect to parser's socket on port 12345.
+* Connect to parser's socket on selected port.
 
 * Send binary data to parser using socket. Receive response with parsed data.
     
@@ -30,9 +36,6 @@ Test
 #### Run unit tests
 
     build$ make test
-or
-
-    FlatBuffersParser$ ./build/test/UnitTests
 
 #### Run functional tests
 
