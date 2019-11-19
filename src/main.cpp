@@ -22,12 +22,15 @@ int main(int argc, char ** argv) {
 
     auto parser = std::make_shared<Parser>();
 
-    std::cout << "Loading schema file: " << arguments.schemaFile << std::endl;
-    try {
-        parser->loadFile(arguments.schemaFile);
-    } catch (const char* msg) {
-        std::cerr << msg << std::endl;
-        return -1;
+    for (const auto& f : arguments.schemaFiles)
+    {
+        std::cout << "Loading schema file: " << f << std::endl;
+        try {
+            parser->loadFile(f);
+        } catch (const char* msg) {
+            std::cerr << msg << std::endl;
+            return -1;
+        }
     }
 
     Socket socket;

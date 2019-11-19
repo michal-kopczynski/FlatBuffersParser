@@ -10,7 +10,7 @@ void Arguments::parse(int argc, char ** argv){
 
     options.add_options()
         ("p,port", "Port to listen.", cxxopts::value<int>())
-        ("f,file", "Schema files.", cxxopts::value<std::string>())
+        ("f,file", "Schema files.", cxxopts::value<std::vector<std::string>>())
         ("v,version", "Print the version number and exit.")
         ("h,help", "Print help and exit.")
         ;
@@ -28,7 +28,7 @@ void Arguments::parse(int argc, char ** argv){
     }
 
     if (result.count("file")) {
-        schemaFile = result["file"].as<std::string>();
+        schemaFiles = result["file"].as<std::vector<std::string>>();
     }
     else {
         throw SchemaFileNotSpecifiedException();
