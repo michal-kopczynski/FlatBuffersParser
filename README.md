@@ -3,7 +3,7 @@ FlatBuffers Parser is socket based tool for parsing binary FlatBuffers data to J
 
 Usage
 -----
-* Initialize with the schema file by passing schema file name as a parameter. Also, specify listening port.
+* Initialize with the schema file by passing schema file name as a parameter. Specify listening port.
 
           FlatBuffersParser [OPTION...]
 
