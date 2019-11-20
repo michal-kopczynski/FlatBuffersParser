@@ -33,21 +33,28 @@ ExternalProject_Add(
 ExternalProject_Get_Property(cxxopts source_dir)
 set(CXXOPTS_INCLUDE_PATH ${source_dir}/include)
 
+# Boost
+include(boost)
+
+add_subdirectory(server)
+
+# message(STATUS "Boost_INCLUDE_DIRS:" ${Boost_INCLUDE_DIRS})
 
 add_library(Arguments Arguments.cpp)
 add_dependencies(Arguments cxxopts)
 target_include_directories(Arguments PRIVATE ${CXXOPTS_INCLUDE_PATH})
 
-add_library(Client Client.cpp Client.hpp)
+add_library(Socket Socket.cpp)
 
-add_library(Socket Socket.cpp Socket.hpp)
+add_library(WebsocketHandler WebsocketHandler.cpp)
 
-add_library(Parser Parser.cpp Parser.hpp)
+add_library(Parser Parser.cpp)
 add_dependencies(Parser flatbuffers)
-target_include_directories(Parser PRIVATE ${flatbuffers_PREFIX}/include)
+target_include_directories(Parser PRIVATE ${flatbuffers_PREFIX}/include)# ${Boost_INCLUDE_DIRS})
+#target_link_libraries(Parser PRIVATE Boost::beast)
 
 add_executable(FlatBuffersParser main.cpp)
-target_link_libraries(FlatBuffersParser Arguments Client Socket Parser ${FLATBUFFERS_LIBRARY} pthread)
+target_link_libraries(FlatBuffersParser Arguments Parser WebsocketHandler Server ${FLATBUFFERS_LIBRARY} pthread boost::beast)
 
 add_custom_command(
         TARGET FlatBuffersParser POST_BUILD

@@ -46,3 +46,12 @@ std::size_t Parser::parseBuffer(const char * reqBuffer, char * respBuffer)
     jsongen.copy(respBuffer, jsongen.length());
     return jsongen.length();
 }
+
+std::shared_ptr<std::string> Parser::parseBuffer(const void* reqBuffer)
+{
+    auto response = std::make_shared<std::string>();
+    if (!flatbuffers::GenerateText(*parser, reqBuffer, response.get())) {
+        std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
+    }
+    return response;
+}
