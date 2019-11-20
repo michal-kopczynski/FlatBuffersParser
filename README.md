@@ -1,5 +1,5 @@
 # FlatBuffersParser
-FlatBuffers Parser is socket based tool for parsing binary FlatBuffers data to JSON format. 
+FlatBuffers Parser is a tool for parsing binary FlatBuffers data to JSON format. 
 
 Usage
 -----
@@ -13,9 +13,9 @@ Usage
           -h, --help      Print help and exit.
 
     
-* Connect to parser's socket on selected port.
+* Connect to parser on selected port using WebSocket.
 
-* Send binary data to parser using socket. Receive response with parsed data.
+* Send binary data to parser in a WebSocket message. Receive response with parsed data.
     
 Build
 -----

@@ -1,12 +1,14 @@
 #include <iostream>
-#include <thread>
-#include <vector>
+#include <iterator>
+#include <algorithm>
+
+#include <boost/asio/signal_set.hpp>
+#include "server/listener.hpp"
+#include "server/shared_state.hpp"
 
 #include "Arguments.hpp"
-#include "Socket.hpp"
 #include "Parser.hpp"
-#include "Client.hpp"
-
+#include "WebsocketHandler.hpp"
 
 int main(int argc, char ** argv) {
     Arguments arguments;
@@ -33,21 +35,38 @@ int main(int argc, char ** argv) {
         }
     }
 
-    Socket socket;
-    socket.bind("127.0.0.1", arguments.port);
-    socket.listen();
+    auto address = net::ip::make_address("0.0.0.0");
+    auto port = static_cast<unsigned short>(arguments.port);
 
-    std::cout << "FlatBuffers parser started." << std::endl;
-    std::cout << "Listening on port: " << arguments.port << std::endl;
+    std::cout << "Starting  listener at address: " << address << " Port: " << port << std::endl;
 
-    std::vector<std::unique_ptr<Client>> clients;
-    for (;;)
-    {
-        std::cout << "Waiting for client " << clients.size() << std::endl;
-        auto client = std::make_unique<Client>(socket.accept(), parser);
-        std::cout << "Client " << clients.size() << " conected" << std::endl;
-        clients.push_back(std::move(client));
-    }
+    auto handler = std::make_shared<WebsocketHandler>(parser);
+
+    // The io_context is required for all I/O
+    net::io_context ioc;
+
+    // Create and launch a listening port
+    std::make_shared<listener>(
+        ioc,
+        tcp::endpoint{address, port},
+        std::make_shared<shared_state>([&handler](const void* data) -> std::shared_ptr<std::string const>
+        {
+            return handler->handleMessage(data);
+        }))->run();
+
+    // Capture SIGINT and SIGTERM to perform a clean shutdown
+    net::signal_set signals(ioc, SIGINT, SIGTERM);
+    signals.async_wait(
+        [&ioc](boost::system::error_code const&, int)
+        {
+            // Stop the io_context. This will cause run()
+            // to return immediately, eventually destroying the
+            // io_context and any remaining handlers in it.
+            ioc.stop();
+        });
+
+    // Run the I/O service on the main thread
+    ioc.run();
 
     std::cout << "FlatBuffers parser finished!" << std::endl;
     return 1;

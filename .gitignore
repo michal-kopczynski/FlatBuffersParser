@@ -1,3 +1,10 @@
 # Build Artifacts
 /bin
 /build
+
+# Python virtualenvs
+venv/
+
+# Archive files
+*.gz
+*.tar
