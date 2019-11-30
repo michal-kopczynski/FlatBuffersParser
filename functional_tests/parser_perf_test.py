@@ -6,6 +6,7 @@ import subprocess
 import time
 import pprint
 import json
+import time
 
 import binascii
 
@@ -26,14 +27,16 @@ class ParserRunner:
 def compare_json(a , b):
     return a == b
 
-async def websocket_send_receive(port, req):
+async def websocket_send_receive_verify(port, req, expected_response):
     uri = "ws://localhost:" + str(port)
     async with websockets.connect(uri) as websocket:
+        for _ in range(2000):
+            await websocket.send(req)
 
-        await websocket.send(req)
-        print("Request sent")
-
-        return await websocket.recv()
+            response = await websocket.recv()
+            if not compare_json(json.loads(response), expected_response):
+                return False
+        return True
 
 if __name__ == '__main__':
     test_successful = False
@@ -47,19 +50,16 @@ if __name__ == '__main__':
     # Open raw file and send it's content to parser
     with open("raw.bin", "rb") as raw_binary_file, open("reference.json", "r") as reference_json_file:
         binary_data = raw_binary_file.read()
+        reference_json = reference_json_file.read()
 
-        response = asyncio.get_event_loop().run_until_complete(websocket_send_receive(parser_port, binary_data))
+        start_perf_counter = time.perf_counter()
+        start_process_time = time.process_time()
+        test_successful = asyncio.get_event_loop().run_until_complete(websocket_send_receive_verify(parser_port, binary_data, json.loads(reference_json)))
 
-        print("Response received")
-        if response:
-            print("Response:")
-            pprint.pprint(json.loads(response))
-
-            reference_json = reference_json_file.read()
-            if compare_json(json.loads(response), json.loads(reference_json)):
-                test_successful = True
-        else:
-            print("Response empty!")
+        end_perf_counter = time.perf_counter()
+        end_process_time = time.process_time()
+        print("Total time: {}".format(end_perf_counter - start_perf_counter))
+        print("Process time: {}".format(end_process_time - start_process_time))
 
     if test_successful:
         print("Parser client test PASSED")
