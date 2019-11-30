@@ -38,11 +38,3 @@ add_executable(ArgumentsTest Arguments_test.cpp ${HEADER_FILES})
 target_include_directories(ArgumentsTest PRIVATE ${CMAKE_HOME_DIRECTORY}/src)
 target_link_libraries(ArgumentsTest Arguments  ${GTEST_BOTH_LIBRARIES} gmock gtest gtest_main)
 add_test(NAME ArgumentsTest COMMAND ArgumentsTest)
-
-
-set(HEADER_FILES ${CMAKE_HOME_DIRECTORY}/src/Socket.hpp)
-
-add_executable(SocketTest Socket_test.cpp ${HEADER_FILES})
-target_include_directories(SocketTest PRIVATE ${CMAKE_HOME_DIRECTORY}/src)
-target_link_libraries(SocketTest Socket  ${GTEST_BOTH_LIBRARIES} gmock gtest gtest_main)
-add_test(NAME SocketTest COMMAND SocketTest)
