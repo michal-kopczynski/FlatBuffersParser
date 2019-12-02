@@ -12,9 +12,6 @@ public:
     std::string type;
     int id;
     char* decodedData;
-private:
-    rapidjson::Document requestJSON;
-    rapidjson::Value data;
 };
 
 WebsocketReqMessage::WebsocketReqMessage(const void * message){
