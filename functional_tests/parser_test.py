@@ -1,6 +1,8 @@
 import os
 import asyncio
 import websockets
+import json
+import base64
 import signal
 import subprocess
 import time
@@ -35,6 +37,22 @@ async def websocket_send_receive(port, req):
 
         return await websocket.recv()
 
+class BinToJSONRequest:
+    def __init__(self, id, binary_data):
+        self.type = "bin_to_json"
+        self.id = id
+        self.data = base64.b64encode(binary_data).decode('ascii')
+
+    def get(self):
+        return json.dumps(self.__dict__) + "\0"
+
+class BinToJSONResponse:
+    def __init__(self, raw):
+        response = json.loads(raw)
+        self.type = response["type"]
+        self.id = response["id"]
+        self.data = json.loads(response["data"])
+
 if __name__ == '__main__':
     test_successful = False
     parser_port = 12345
@@ -47,16 +65,20 @@ if __name__ == '__main__':
     # Open raw file and send it's content to parser
     with open("raw.bin", "rb") as raw_binary_file, open("reference.json", "r") as reference_json_file:
         binary_data = raw_binary_file.read()
+        reference_json = reference_json_file.read()
 
-        response = asyncio.get_event_loop().run_until_complete(websocket_send_receive(parser_port, binary_data))
+        request = BinToJSONRequest(1, binary_data)
+
+        response = asyncio.get_event_loop().run_until_complete(websocket_send_receive(parser_port, request.get()))
 
         print("Response received")
         if response:
             print("Response:")
-            pprint.pprint(json.loads(response))
+            print(json.loads(response))
 
-            reference_json = reference_json_file.read()
-            if compare_json(json.loads(response), json.loads(reference_json)):
+            resp = BinToJSONResponse(response)
+            pprint.pprint(resp.data)
+            if compare_json(resp.data, json.loads(reference_json)):
                 test_successful = True
         else:
             print("Response empty!")
