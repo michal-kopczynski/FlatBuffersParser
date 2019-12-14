@@ -7,14 +7,14 @@
 
 class WebsocketRespMessage {
 public:
-    WebsocketRespMessage(const std::string type, int id, std::shared_ptr<std::string> data);
+    WebsocketRespMessage(const std::string type, int id, std::string const& data);
 
     const char* getBuffer();
 private:
     rapidjson::StringBuffer buffer;
 };
 
-WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::shared_ptr<std::string> data){
+WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::string const& data){
     rapidjson::Document responseJSON;
     responseJSON.SetObject();
     rapidjson::Value typeValue;
@@ -24,7 +24,7 @@ WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::
     rapidjson::Value idValue(id);
     responseJSON.AddMember("id", idValue, responseJSON.GetAllocator());
     
-    rapidjson::Value dataValue(rapidjson::GenericStringRef(data->c_str()));
+    rapidjson::Value dataValue(rapidjson::GenericStringRef(data.c_str()));
     responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
 
     rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
