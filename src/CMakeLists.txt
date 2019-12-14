@@ -13,7 +13,6 @@ ExternalProject_Add(
         LOG_CONFIGURE ON
         LOG_BUILD ON
 )
-
 set(FLATBUFFERS_LIBRARY ${flatbuffers_PREFIX}/lib/libflatbuffers.a)
 set(FLATBUFFERS_GENERATOR ${flatbuffers_PREFIX}/bin/flatc)
 
@@ -29,11 +28,10 @@ ExternalProject_Add(
         LOG_BUILD ON
         LOG_INSTALL ON
         )
-
 ExternalProject_Get_Property(cxxopts source_dir)
 set(CXXOPTS_INCLUDE_PATH ${source_dir}/include)
 
-
+# rapidJSON
 set(rapidJSON_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/rapidJSON)
 ExternalProject_Add(
         rapidJSON
@@ -49,32 +47,27 @@ ExternalProject_Add(
 ExternalProject_Get_Property(rapidJSON source_dir)
 set(RAPIDJSON_INCLUDE_PATH ${source_dir}/include)
 
-# Boost
-include(boost)
-
+# server
 add_subdirectory(server)
 
-# message(STATUS "Boost_INCLUDE_DIRS:" ${Boost_INCLUDE_DIRS})
 
 add_library(Arguments Arguments.cpp)
 add_dependencies(Arguments cxxopts)
 target_include_directories(Arguments PRIVATE ${CXXOPTS_INCLUDE_PATH})
 
-add_library(Socket Socket.cpp)
-
-add_library(WebsocketHandler WebsocketHandler.cpp)
-add_dependencies(WebsocketHandler rapidJSON boost::beast)
-target_include_directories(WebsocketHandler PRIVATE ${RAPIDJSON_INCLUDE_PATH} ${boost_INCLUDE_DIR})
-
 add_library(Parser Parser.cpp)
 add_dependencies(Parser flatbuffers)
-target_include_directories(Parser PRIVATE ${flatbuffers_PREFIX}/include)# ${Boost_INCLUDE_DIRS})
-#target_link_libraries(Parser PRIVATE Boost::beast)
+target_include_directories(Parser PRIVATE ${flatbuffers_PREFIX}/include)
+
+add_library(HttpHandler HttpHandler.cpp)
+add_library(WebSocketHandler WebSocketHandler.cpp)
+target_include_directories(WebSocketHandler PRIVATE ${RAPIDJSON_INCLUDE_PATH})
 
 add_executable(FlatBuffersParser main.cpp)
 add_dependencies(FlatBuffersParser rapidJSON)
-target_include_directories(FlatBuffersParser PRIVATE) #${RAPIDJSON_INCLUDE_PATH})
-target_link_libraries(FlatBuffersParser Arguments Parser WebsocketHandler Server ${FLATBUFFERS_LIBRARY} pthread boost::beast)
+target_include_directories(FlatBuffersParser PRIVATE)
+
+target_link_libraries(FlatBuffersParser  Arguments Parser HttpHandler HttpRouter WebSocketHandler Server ${FLATBUFFERS_LIBRARY} pthread )
 
 add_custom_command(
         TARGET FlatBuffersParser POST_BUILD

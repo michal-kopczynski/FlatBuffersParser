@@ -12,9 +12,10 @@ class Parser {
 public:
     Parser();
     ~Parser();
+
     void loadFile(const std::string filename);
-    std::size_t parseBuffer(const char * reqBuffer, char * respBuffer);
-    std::shared_ptr<std::string> parseBuffer(const void* reqBuffer);
+    std::string parseBuffer(const void* reqBuffer) const;
+    std::string parseBuffer(std::string const& reqBuffer) const;
 
 private:
     std::unique_ptr <flatbuffers::Parser> parser;

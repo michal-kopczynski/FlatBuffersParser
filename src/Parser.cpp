@@ -36,21 +36,19 @@ void Parser::loadFile(const std::string filename){
     }
 }
 
-std::size_t Parser::parseBuffer(const char * reqBuffer, char * respBuffer)
+std::string Parser::parseBuffer(const void* reqBuffer) const
 {
-    std::string jsongen;
-    if (!flatbuffers::GenerateText(*parser, reqBuffer, &jsongen)) {
+    std::string response;
+    if (!flatbuffers::GenerateText(*parser, reqBuffer, &response)) {
         std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
-        return 0;
     }
-    jsongen.copy(respBuffer, jsongen.length());
-    return jsongen.length();
+    return response;
 }
 
-std::shared_ptr<std::string> Parser::parseBuffer(const void* reqBuffer)
+std::string Parser::parseBuffer(std::string const& reqBuffer) const
 {
-    auto response = std::make_shared<std::string>();
-    if (!flatbuffers::GenerateText(*parser, reqBuffer, response.get())) {
+    std::string response;
+    if (!flatbuffers::GenerateText(*parser, reqBuffer.c_str(), &response)) {
         std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
     }
     return response;
