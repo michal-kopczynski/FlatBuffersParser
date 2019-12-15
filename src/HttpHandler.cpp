@@ -9,8 +9,7 @@ parser(parser)
 {
 }
 
-std::string HttpHandler::handleBinToJsonRequest(std::string const& reqBuffer) const
+std::tuple<std::string, std::string> HttpHandler::handleBinToJsonRequest(std::string const& reqBuffer) const
 {
-    std::cout << "HttpHandler::handleBinToJsonRequest" << std::endl;
-    return parser.parseBuffer(reqBuffer);
+    return { parser.parseBuffer(reqBuffer), "application/json"};
 }
