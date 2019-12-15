@@ -39,10 +39,13 @@ int main(int argc, char ** argv) {
     WebSocketHandler webSocketHandler(parser);
 
     auto httpRouter = std::make_unique<HttpRouter>();
-
-    httpRouter->addHandler(std::string("/bin_to_json"), [&httpHandler](auto reqBuffer) { 
-        return httpHandler.handleBinToJsonRequest(reqBuffer);
-    } );
+    try {
+        httpRouter->addHandler(std::string("/bin_to_json"), [&httpHandler](auto reqBuffer) { 
+            return httpHandler.handleBinToJsonRequest(reqBuffer);
+        } );
+    } catch (PathAlreadyAddedException& e) {
+        return -1;
+    }
 
     Server server(  "localhost", 
                     arguments.port, 

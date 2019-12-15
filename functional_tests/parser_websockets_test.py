@@ -3,30 +3,12 @@ import asyncio
 import websockets
 import json
 import base64
-import signal
-import subprocess
 import time
 import pprint
 import json
 
-import binascii
+import test_helper as test_helper
 
-
-class ParserRunner:
-    def start_parser(self, port):
-        print("Starting parser")
-        self.parser_subprocess = subprocess.Popen([os.path.join('..','bin','FlatBuffersParser'),
-                                                   '--file=monster.fbs', '--port=' + str(port)
-                                                   ], stdout=subprocess.PIPE,
-                               shell=False, preexec_fn=os.setsid)
-        print("Parser started. Listening on port: {}".format(port))
-
-    def terminate_parser(self):
-        os.killpg(os.getpgid(self.parser_subprocess.pid), signal.SIGTERM)
-        print("Parser terminated")
-
-def compare_json(a , b):
-    return a == b
 
 async def websocket_send_receive(port, req):
     uri = "ws://localhost:" + str(port)
@@ -58,7 +40,7 @@ if __name__ == '__main__':
     parser_port = 12345
     print("Parser client test started")
 
-    parser_runner = ParserRunner()
+    parser_runner = test_helper.ParserRunner()
     parser_runner.start_parser(parser_port)
     time.sleep(0.5)
 
@@ -78,7 +60,7 @@ if __name__ == '__main__':
 
             resp = BinToJSONResponse(response)
             pprint.pprint(resp.data)
-            if compare_json(resp.data, json.loads(reference_json)):
+            if test_helper.compare_json(resp.data, json.loads(reference_json)):
                 test_successful = True
         else:
             print("Response empty!")

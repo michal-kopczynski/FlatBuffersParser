@@ -6,7 +6,7 @@ execute_test () {
     echo ""
 }
 
-execute_test parser_test
-execute_test parser_perf_test
+execute_test parser_websockets_test
+execute_test parser_websockets_perf_test
 execute_test parser_rest_test
 execute_test parser_rest_perf_test

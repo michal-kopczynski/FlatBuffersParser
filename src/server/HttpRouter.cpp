@@ -1,6 +1,6 @@
 #include "HttpRouter.hpp"
 
-void HttpRouter::addHandler(const std::string path, std::function<std::string(std::string)> handler)
+void HttpRouter::addHandler(const std::string path, handler_t handler)
 {
     if (handlers.find(path) == handlers.end())
     {
@@ -9,6 +9,7 @@ void HttpRouter::addHandler(const std::string path, std::function<std::string(st
     else
     {
         std::cout << "Hendler " << path << " already registered!" << std::endl;
+        throw PathAlreadyAddedException();
     }
 }
 
@@ -18,11 +19,11 @@ restinio::request_handling_status_t HttpRouter::handle(restinio::request_handle_
 
     if (handlers.find(std::string(target)) != handlers.end())
     {
-        auto respBody = handlers[std::string(target)](req->body());
+        auto [respBody, contentType] = handlers[std::string(target)](req->body());
         return req->create_response()
             .append_header( restinio::http_field::server, "FlatBuffersParser" )
             .append_header_date_field()
-            .append_header( restinio::http_field::content_type, "application/json")
+            .append_header( restinio::http_field::content_type, contentType)
             .set_body( std::move(respBody) )
             .done();
     }
