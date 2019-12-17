@@ -26,13 +26,13 @@ Send JSON message contatining type of request, id and data to be parsed.
 * Binary to JSON:
     {
     "type": "bin_to_json"
-    "id": 1, 
+    "id": X, 
     "data": #base64 encoded binary 
     }
 * JSON to binary:
     {
     "type": "json_to_bin",
-    "id": 1, 
+    "id": X, 
     "data": #JSON FlatBuffer
     }
     
@@ -43,7 +43,7 @@ Build
     $ git clone https://github.com/MichalKopczynski/FlatBuffersParser.git
     $ cd FlatBuffersParser
 
-#### Dependecies
+#### Dependencies
 
 Most dependencies (FlatBuffers, cxxopts, RapidJSON) are fetched automatically by cmake. Currently only RESTinio requires manual installation (i.e. using vcpkg).
 
