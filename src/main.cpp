@@ -35,13 +35,16 @@ int main(int argc, char ** argv) {
         }
     }
 
-    HttpHandler httpHandler(parser);
     WebSocketHandler webSocketHandler(parser);
 
+    HttpHandler httpHandler(parser);
     auto httpRouter = std::make_unique<HttpRouter>();
     try {
         httpRouter->addHandler(std::string("/bin_to_json"), [&httpHandler](auto reqBuffer) { 
             return httpHandler.handleBinToJsonRequest(reqBuffer);
+        } );
+        httpRouter->addHandler(std::string("/json_to_bin"), [&httpHandler](auto reqBuffer) { 
+            return httpHandler.handleJsonToBinRequest(reqBuffer);
         } );
     } catch (PathAlreadyAddedException& e) {
         return -1;

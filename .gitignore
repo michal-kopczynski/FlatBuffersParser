@@ -5,6 +5,9 @@
 # Python virtualenvs
 venv/
 
+# Python pycache
+__pycache__/
+
 # Archive files
 *.gz
 *.tar

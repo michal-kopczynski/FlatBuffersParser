@@ -12,6 +12,7 @@ public:
     HttpHandler(Parser const& parser);
 
     std::tuple<std::string, std::string> handleBinToJsonRequest(std::string const& reqBuffer) const;
+    std::tuple<std::string, std::string> handleJsonToBinRequest(std::string const& reqBuffer) const;
 
 private:
     Parser const& parser;

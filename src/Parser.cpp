@@ -16,7 +16,7 @@ Parser::Parser()
 
 Parser::~Parser() = default;
 
-void Parser::loadFile(const std::string filename){
+void Parser::loadFile(const std::string& filename){
     std::ifstream fi(filename);
     bool ok;
     if (fi.is_open()) {
@@ -36,20 +36,25 @@ void Parser::loadFile(const std::string filename){
     }
 }
 
-std::string Parser::parseBuffer(const void* reqBuffer) const
+std::string Parser::parseBinToJson(const void* bin) const
 {
     std::string response;
-    if (!flatbuffers::GenerateText(*parser, reqBuffer, &response)) {
+    if (!flatbuffers::GenerateText(*parser, bin, &response)) {
         std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
+        throw ParsingFailedException();
     }
     return response;
 }
 
-std::string Parser::parseBuffer(std::string const& reqBuffer) const
+std::string Parser::parseJsonToBin(const void* json) const
 {
-    std::string response;
-    if (!flatbuffers::GenerateText(*parser, reqBuffer.c_str(), &response)) {
-        std::cout <<"Couldn't serialize parsed data to JSON!" << std::endl;
+    const char *include_directories[] = { "", nullptr };
+    if (!parser->Parse(static_cast<const char*>(json), include_directories)){
+        std::cout << "Error parsing JSON file!" << std::endl;  
+        throw ParsingFailedException();
     }
-    return response;
+    else{
+        return std::string( reinterpret_cast<char *>(parser->builder_.GetBufferPointer()),
+                            static_cast<size_t>(parser->builder_.GetSize()) );
+    }
 }
