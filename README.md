@@ -63,5 +63,5 @@ Test
 #### Run functional tests
 
     FlatBuffersParser$ cd functional_tests
-    functional_tests$ python parser_test.py
+    functional_tests$ ./run_all_tests.sh
     
