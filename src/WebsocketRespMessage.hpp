@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/Base64.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/prettywriter.h"
@@ -24,11 +25,21 @@ WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::
     rapidjson::Value idValue(id);
     responseJSON.AddMember("id", idValue, responseJSON.GetAllocator());
     
-    rapidjson::Value dataValue(rapidjson::GenericStringRef(data.c_str()));
-    responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
-
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-    responseJSON.Accept(writer);
+    if (type == "bin_to_json") {
+        // if response is JSON - just copy
+        rapidjson::Value dataValue(rapidjson::GenericStringRef(data.c_str()));
+        responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+        responseJSON.Accept(writer);
+    } else {
+        // if response is binary - do base64 encode
+        char encodedData[base64::encoded_size(data.size())];
+        base64::encode(encodedData, data.c_str(), data.size());
+        rapidjson::Value dataValue(rapidjson::GenericStringRef(encodedData, base64::encoded_size(data.size())));
+        responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+        responseJSON.Accept(writer);
+    }
 }
 
 const char* WebsocketRespMessage::getBuffer(){
