@@ -16,6 +16,7 @@ private:
 };
 
 WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::string const& data){
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
     rapidjson::Document responseJSON;
     responseJSON.SetObject();
     rapidjson::Value typeValue;
@@ -24,12 +25,11 @@ WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::
 
     rapidjson::Value idValue(id);
     responseJSON.AddMember("id", idValue, responseJSON.GetAllocator());
-    
+
     if (type == "bin_to_json") {
         // if response is JSON - just copy
         rapidjson::Value dataValue(rapidjson::GenericStringRef(data.c_str()));
         responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
         responseJSON.Accept(writer);
     } else {
         // if response is binary - do base64 encode
@@ -37,7 +37,6 @@ WebsocketRespMessage::WebsocketRespMessage(const std::string type, int id, std::
         base64::encode(encodedData, data.c_str(), data.size());
         rapidjson::Value dataValue(rapidjson::GenericStringRef(encodedData, base64::encoded_size(data.size())));
         responseJSON.AddMember("data", dataValue, responseJSON.GetAllocator());
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
         responseJSON.Accept(writer);
     }
 }
