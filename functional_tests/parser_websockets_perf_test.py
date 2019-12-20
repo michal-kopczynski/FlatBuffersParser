@@ -2,42 +2,32 @@ import os
 import asyncio
 import websockets
 import json
-import base64
 import time
 import pprint
-import json
 import time
+
+import test_helper as test_helper
+import websockets_protocol as ws_protocol
 
 import logging
 
-import test_helper as test_helper
-
-
-class BinToJSONRequest:
-    def __init__(self, id, binary_data):
-        self.type = "bin_to_json"
-        self.id = id
-        self.data = base64.b64encode(binary_data).decode('ascii')
-
-    def get(self):
-        return json.dumps(self.__dict__) + "\0"
-
-class BinToJSONResponse:
-    def __init__(self, raw):
-        response = json.loads(raw)
-        self.type = response["type"]
-        self.id = response["id"]
-        self.data = json.loads(response["data"])
-
-async def websocket_send_receive_verify(port, req, expected_response):
+async def websocket_send_receive_verify(port, buffer_json):
     uri = "ws://localhost:" + str(port)
+    request_jtb = ws_protocol.JsonToBinRequest(1, buffer_json)
+
     async with websockets.connect(uri) as websocket:
         for _ in range(2000):
-            await websocket.send(req)
-
+            await websocket.send(request_jtb.get())
             response = await websocket.recv()
-            resp = BinToJSONResponse(response)
-            if not test_helper.compare_json(resp.data, expected_response):
+
+            response_jtb = ws_protocol.JsonToBinResponse(response)
+            request_btj = ws_protocol.BinToJsonRequest(1, response_jtb.data)
+
+            await websocket.send(request_btj.get())
+            response = await websocket.recv()
+
+            response_btj = ws_protocol.BinToJsonResponse(response)
+            if not test_helper.compare_json(response_btj.data, json.loads(buffer_json)):
                 return False
         return True
 
@@ -47,22 +37,20 @@ if __name__ == '__main__':
     parser_port = 12345
     print("Parser client test started")
 
-    # logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG) # WebSockets debug
 
     parser_runner = test_helper.ParserRunner()
     parser_runner.start_parser(parser_port)
     time.sleep(0.5)
 
     # Open raw file and send it's content to parser
-    with open("raw.bin", "rb") as raw_binary_file, open("reference.json", "r") as reference_json_file:
-        binary_data = raw_binary_file.read()
+    with open("reference.json", "r") as reference_json_file:
         reference_json = reference_json_file.read()
 
-        request = BinToJSONRequest(1, binary_data)
 
         start_perf_counter = time.perf_counter()
         start_process_time = time.process_time()
-        test_successful = asyncio.get_event_loop().run_until_complete(websocket_send_receive_verify(parser_port, request.get(), json.loads(reference_json)))
+        test_successful = asyncio.get_event_loop().run_until_complete(websocket_send_receive_verify(parser_port, reference_json))
 
         end_perf_counter = time.perf_counter()
         end_process_time = time.process_time()
