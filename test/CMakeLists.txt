@@ -36,5 +36,13 @@ set(HEADER_FILES ${CMAKE_HOME_DIRECTORY}/src/Arguments.hpp)
 
 add_executable(ArgumentsTest Arguments_test.cpp ${HEADER_FILES})
 target_include_directories(ArgumentsTest PRIVATE ${CMAKE_HOME_DIRECTORY}/src)
-target_link_libraries(ArgumentsTest Arguments  ${GTEST_BOTH_LIBRARIES} gmock gtest gtest_main)
+target_link_libraries(ArgumentsTest Arguments ${GTEST_BOTH_LIBRARIES} gmock gtest gtest_main)
 add_test(NAME ArgumentsTest COMMAND ArgumentsTest)
+
+
+set(HEADER_FILES ${CMAKE_HOME_DIRECTORY}/src/Parser.hpp)
+
+add_executable(ParserTest Parser_test.cpp ${HEADER_FILES})
+target_include_directories(ParserTest PRIVATE ${CMAKE_HOME_DIRECTORY}/src)
+target_link_libraries(ParserTest Parser ${GTEST_BOTH_LIBRARIES}  gmock gtest gtest_main)
+add_test(NAME ParserTest COMMAND ParserTest)

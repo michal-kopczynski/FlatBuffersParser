@@ -15,7 +15,8 @@ public:
     Parser();
     ~Parser();
 
-    void loadFile(const std::string& filename);
+    std::string loadFile(const std::string& fileName) const;
+    void parseFile(const std::string& schemaFile);
     std::string parseBinToJson(const void* bin) const;
     std::string parseJsonToBin(const void* json) const;
 
