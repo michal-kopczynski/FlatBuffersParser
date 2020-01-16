@@ -28,7 +28,8 @@ int main(int argc, char ** argv) {
     {
         std::cout << "Loading schema file: " << f << std::endl;
         try {
-            parser.loadFile(f);
+            auto schemaFile = parser.loadFile(f);
+            parser.parseFile(schemaFile);
         } catch (const char* msg) {
             std::cerr << msg << std::endl;
             return -1;

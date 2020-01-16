@@ -16,23 +16,26 @@ Parser::Parser()
 
 Parser::~Parser() = default;
 
-void Parser::loadFile(const std::string& filename){
-    std::ifstream fi(filename);
-    bool ok;
+
+std::string Parser::loadFile(const std::string& fileName) const {
+    std::string schemaFile;
+    std::ifstream fi(fileName);
+
     if (fi.is_open()) {
-        std::string schemafile;
-        ok = flatbuffers::LoadFile(filename.c_str(), false, &schemafile);
-        if (!ok) {
+        if (!flatbuffers::LoadFile(fileName.c_str(), false, &schemaFile)) {
             throw "Couldn't load file!";
-        }
-        std::string file(filename);
-        const char *include_directories[] = { "", nullptr };
-        if (!parser->Parse(schemafile.c_str(), include_directories)){
-            throw "Error parsing file!";   
         }
     }
     else{
         throw "File not found!";
+    }
+    return schemaFile;
+}
+
+void Parser::parseFile(const std::string& schemaFile){
+    const char *include_directories[] = { "", nullptr };
+    if (!parser->Parse(schemaFile.c_str(), include_directories)){
+        throw "Error parsing file!";   
     }
 }
 

@@ -58,6 +58,7 @@ target_include_directories(Arguments PRIVATE ${CXXOPTS_INCLUDE_PATH})
 add_library(Parser Parser.cpp)
 add_dependencies(Parser flatbuffers)
 target_include_directories(Parser PRIVATE ${flatbuffers_PREFIX}/include)
+target_link_libraries(Parser ${FLATBUFFERS_LIBRARY} )
 
 add_library(HttpHandler HttpHandler.cpp)
 add_library(WebSocketHandler WebSocketHandler.cpp)
@@ -67,7 +68,7 @@ add_executable(FlatBuffersParser main.cpp)
 add_dependencies(FlatBuffersParser rapidJSON)
 target_include_directories(FlatBuffersParser PRIVATE)
 
-target_link_libraries(FlatBuffersParser  Arguments Parser HttpHandler HttpRouter WebSocketHandler Server ${FLATBUFFERS_LIBRARY} pthread )
+target_link_libraries(FlatBuffersParser  Arguments Parser HttpHandler HttpRouter WebSocketHandler Server pthread )
 
 add_custom_command(
         TARGET FlatBuffersParser POST_BUILD
