@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 #include <iostream>
+#include <fstream>
 
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/idl.h"
