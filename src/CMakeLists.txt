@@ -6,8 +6,8 @@ set(flatbuffers_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/flatbuffers)
 ExternalProject_Add(
         flatbuffers
         PREFIX ${flatbuffers_PREFIX}
-        URL "https://github.com/google/flatbuffers/archive/v1.10.0.tar.gz"
-        URL_MD5 "f7d19a3f021d93422b0bc287d7148cd2"
+        URL "https://github.com/google/flatbuffers/archive/refs/tags/v2.0.0.tar.gz"
+        URL_MD5 "a27992324c3cbf86dd888268a23d17bd"
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${flatbuffers_PREFIX} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         LOG_UPDATE ON
         LOG_CONFIGURE ON
