@@ -88,5 +88,5 @@ TEST(Parser, parse_validJson_successful)
     auto bin = parser.parseJsonToBin(referenceJson);
     auto json = parser.parseBinToJson(bin.c_str());
 
-    EXPECT_FALSE(json.compare(referenceJson));
+    ASSERT_EQ(0, json.compare(referenceJson));
 }
