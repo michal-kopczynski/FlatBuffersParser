@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  fb-parser:
+    network_mode: host
+    build:
+      context: .
+      target: fb-parser-deploy
+    volumes:
+    - ./tests/api:/mnt
+    image: "fb-parser"
+    ports:
+    - "12345:12345"
+    command: --port="12345" --file=/mnt/monster.fbs
+  fb-parser-tests-unit:
+    build:
+      context: .
+      target: fb-parser-tests-unit
+  fb-parser-tests-api:
+    network_mode: host
+    build:
+      context: .
+      target: fb-parser-tests-api
+    depends_on:
+      - fb-parser
+    command: --port=12345
+
+      
+
+
+
